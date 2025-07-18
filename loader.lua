@@ -1,4 +1,3 @@
--- ✅ Divine pets list (edit as needed)
 local divinePets = {
     ["Red Fox"] = true,
     ["Dragonfly"] = true,
@@ -11,7 +10,6 @@ local divinePets = {
     ["Disco Bee"] = true
 }
 
--- 🔍 Find all Divine pet labels that match [Age ##]
 local function findAllDivineLabels()
     local player = game.Players.LocalPlayer
     local gui = player:FindFirstChild("PlayerGui")
@@ -33,7 +31,6 @@ local function findAllDivineLabels()
     return labels
 end
 
--- ⚠️ Show a red warning label temporarily
 local function flashWarning(message)
     local screenGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("SetAgeTo50Gui")
     if not screenGui then return end
@@ -56,7 +53,16 @@ local function flashWarning(message)
     end)
 end
 
--- 📱 Create centered button UI
+local function createClickSound(parent)
+    local sound = Instance.new("Sound")
+    sound.Name = "ClickSound"
+    sound.SoundId = "rbxassetid://9118823106" -- soft click/ding
+    sound.Volume = 1
+    sound.PlayOnRemove = true
+    sound.Parent = parent
+    return sound
+end
+
 local function createDivineAgeUI()
     local gui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
     gui.Name = "SetAgeTo50Gui"
@@ -64,9 +70,9 @@ local function createDivineAgeUI()
 
     local button = Instance.new("TextButton", gui)
     button.Size = UDim2.new(0.5, 0, 0.07, 0)
-    button.Position = UDim2.new(0.25, 0, 0.45, 0) -- Center of screen
+    button.Position = UDim2.new(0.25, 0, 0.45, 0)
     button.BackgroundColor3 = Color3.fromRGB(0, 170, 90)
-    button.Text = "Auto Lvl 50 Divine Pets" -- ✅ updated text
+    button.Text = "Auto Lvl 50 Divine Pets"
     button.TextScaled = true
     button.Font = Enum.Font.GothamBold
     button.TextColor3 = Color3.new(1, 1, 1)
@@ -74,8 +80,18 @@ local function createDivineAgeUI()
     local corner = Instance.new("UICorner", button)
     corner.CornerRadius = UDim.new(0, 12)
 
+    local sound = createClickSound(button)
+
     button.MouseButton1Click:Connect(function()
         local found = findAllDivineLabels()
+        local originalColor = button.BackgroundColor3
+        button.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+        task.delay(0.2, function()
+            button.BackgroundColor3 = originalColor
+        end)
+
+        sound:Destroy()
+
         if #found > 0 then
             for _, label in ipairs(found) do
                 label.Text = label.Text:gsub("Age%s*%d+", "Age 50")

